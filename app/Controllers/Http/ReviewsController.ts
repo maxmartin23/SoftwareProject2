@@ -35,7 +35,6 @@ export default class ReviewsController {
       };
       cleanReviews.push(review);
     }
-
     return cleanReviews;
   }
 
@@ -80,5 +79,57 @@ export default class ReviewsController {
     cleanReview.user["lastName"] = user.lastName;
 
     return response.created(cleanReview);
+  }
+
+  public async update({ request, response }) {
+    const { coffeeBeanId, rating, comment } = request.body();
+    const userId = request["user"].userId;
+    if (!coffeeBeanId || !rating)
+      return response.notFound({ error: "Coffee bean does not exist" });
+    const coffeeBean = await CoffeeBean.findOne({ coffeeBeanId });
+    if (!coffeeBean)
+      return response.notFound({ error: "Coffee bean does not exist" });
+    const existingReview = await Review.findOne({
+      coffeeBeanId,
+      userId,
+    });
+
+    if (!existingReview)
+      return response.notFound({ error: "Review does not exist" });
+    const user = await User.findOne({ userId });
+    existingReview.rating = rating;
+    existingReview.comment = comment ?? "";
+    existingReview.updatedAt = new Date();
+    await existingReview.save();
+
+    const cleanReview = {
+      coffeeBeanId: existingReview.coffeeBeanId,
+      rating: existingReview.rating,
+      comment: existingReview.comment,
+      createdAt: existingReview.createdAt,
+      updatedAt: existingReview.updatedAt,
+      user: {
+        userId: existingReview.userId,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+    };
+    return cleanReview;
+  }
+  public async delete({ request, response }) {
+    const { id: coffeeBeanId } = request.qs();
+    const { userId } = request["user"];
+
+    if (!coffeeBeanId)
+      return response.notFound({ error: "Coffee bean does not exist" });
+
+    const reviewToDelete = await Review.findOne({
+      coffeeBeanId,
+      userId,
+    });
+    if (!reviewToDelete)
+      return response.notFound({ error: "Review does not exist" });
+    await reviewToDelete.remove();
+    return null;
   }
 }
