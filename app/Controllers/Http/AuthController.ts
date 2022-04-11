@@ -13,6 +13,11 @@ const jwt = require("jsonwebtoken");
 import Hash from "@ioc:Adonis/Core/Hash";
 import createShop from "App/Helpers/CreateShop";
 const Shop = mongoose.model("Shop");
+import Hash from "@ioc:Adonis/Core/Hash";
+import Encryption from "@ioc:Adonis/Core/Encryption";
+
+
+
 
 export default class AuthController {
   //Allows users to create new accounts, returns the new account info
@@ -63,10 +68,14 @@ export default class AuthController {
       userId,
       userType,
       email: normalizedEmail,
-      firstName,
-      lastName,
-      address,
-      password,
+      firstName: Encryption.encrypt(firstName),
+      lastName: Encryption.encrypt(lastName),
+      address:{
+        street: Encryption.encrypt(address.street),
+        city: Encryption.encrypt(address.city),
+        state: Encryption.encrypt(address.state),
+      },
+      password: await Hash.make(password),
       status: 1,
     });
 

@@ -38,19 +38,19 @@ const userSchema = new Schema({
   },
 });
 
-userSchema.pre("save", async function (next) {
-  this.firstName = Encryption.encrypt(this.firstName.trim());
-  this.lastName = Encryption.encrypt(this.lastName.trim());
-  this.password = await Hash.make(this.password);
-  this.updatedAt = Date.now();
-  const { street, city, province } = this.address;
-  this.address = {
-    street: Encryption.encrypt(street.trim()),
-    city: Encryption.encrypt(city.trim()),
-    province: Encryption.encrypt(province.trim()),
-  };
-  next();
-});
+// userSchema.pre("save", async function (next) {
+//   this.firstName = Encryption.encrypt(this.firstName.trim());
+//   this.lastName = Encryption.encrypt(this.lastName.trim());
+//   this.password = await Hash.make(this.password);
+//   this.updatedAt = Date.now();
+//   const { street, city, province } = this.address;
+//   this.address = {
+//     street: Encryption.encrypt(street.trim()),
+//     city: Encryption.encrypt(city.trim()),
+//     province: Encryption.encrypt(province.trim()),
+//   };
+//   next();
+// });
 
 userSchema.post("init", function (next) {
   const { street, city, province } = this.address;

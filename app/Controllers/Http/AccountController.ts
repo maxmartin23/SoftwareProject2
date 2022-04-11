@@ -6,8 +6,9 @@ This class contains the logic for all routes related to accounts
 
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 const mongoose = require("mongoose");
-import Hash from "@ioc:Adonis/Core/Hash";
 const User = mongoose.model("User");
+import Hash from "@ioc:Adonis/Core/Hash";
+import Encryption from "@ioc:Adonis/Core/Encryption";
 
 
 
@@ -24,14 +25,14 @@ export default class AccountController {
     const user = request["user"]!;
     const { firstName, lastName, address } = request.body();
     //TODO add empty string validations
-    user.firstName = firstName.length > 0 ? firstName : user.firstName;
-    user.lastName = lastName.length > 0 ? lastName : user.lastName;
+    user.firstName = firstName.length > 0 ? Encryption.encrypt(firstName) : user.firstName;
+    user.lastName = lastName.length > 0 ? Encryption.encrypt(lastName) : user.lastName;
     if (address) {
       const { street, city, province } = address;
       user.address = {
-        street: street.length > 0 ? street : user.address.street,
-        city: city.length > 0 ? city : user.address.city,
-        province: province.length > 0 ? province : user.address.province,
+        street: street.length > 0 ? Encryption.encrypt(street) : user.address.street,
+        city: city.length > 0 ? Encryption.encrypt(city) : user.address.city,
+        province: province.length > 0 ? Encryption.encrypt(province) : user.address.province,
       };
     }
     await user.save()
