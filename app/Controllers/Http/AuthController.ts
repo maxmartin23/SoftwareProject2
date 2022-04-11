@@ -73,7 +73,7 @@ export default class AuthController {
       address:{
         street: Encryption.encrypt(address.street),
         city: Encryption.encrypt(address.city),
-        state: Encryption.encrypt(address.state),
+        province: Encryption.encrypt(address.province),
       },
       password: await Hash.make(password),
       status: 1,
