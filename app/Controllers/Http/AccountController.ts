@@ -10,14 +10,11 @@ const User = mongoose.model("User");
 import Hash from "@ioc:Adonis/Core/Hash";
 import Encryption from "@ioc:Adonis/Core/Encryption";
 
-
-
 export default class AccountController {
-
   //Returns the current user info
-  public async me({request, response}){
+  public async me({ request, response }) {
     const user = request["user"]!;
-    return user
+    return user;
   }
 
   //Updates the user's info
@@ -25,21 +22,26 @@ export default class AccountController {
     const user = request["user"]!;
     const { firstName, lastName, address } = request.body();
     //TODO add empty string validations
-    user.firstName = firstName.length > 0 ? Encryption.encrypt(firstName) : user.firstName;
-    user.lastName = lastName.length > 0 ? Encryption.encrypt(lastName) : user.lastName;
+    user.firstName = Encryption.encrypt(
+      firstName.length > 0 ? firstName : user.firstName
+    );
+    user.lastName = Encryption.encrypt(
+      lastName.length > 0 ? lastName : user.lastName
+    );
     if (address) {
       const { street, city, province } = address;
       user.address = {
-        street: street.length > 0 ? Encryption.encrypt(street) : user.address.street,
-        city: city.length > 0 ? Encryption.encrypt(city) : user.address.city,
-        province: province.length > 0 ? Encryption.encrypt(province) : user.address.province,
+        street: Encryption.encrypt(street.length > 0 ? street : user.street),
+        city: Encryption.encrypt(city.length > 0 ? city : user.city),
+        province: Encryption.encrypt(
+          province.length > 0 ? province : user.province
+        ),
       };
     }
-    await user.save()
+    await user.save();
 
-    const updatedUser = await User.find({userId: user.userId});
-    return updatedUser
-    
+    const updatedUser = await User.find({ userId: user.userId });
+    return updatedUser;
   }
 
   //Updates the user's password
