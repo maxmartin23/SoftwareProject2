@@ -11,6 +11,11 @@ const Shop = mongoose.model("Shop");
 import { v4 as uuid } from "uuid";
 
 export default class CoffeeBeansController {
+  /**
+   *
+   *  Gets all coffee beans from a user's shop
+   * @returns [CoffeeBean]
+   */
   public async getAll({ request, response }) {
     const userId = request["user"]!.userId;
     const shop = await Shop.findOne({ userId });
@@ -18,6 +23,18 @@ export default class CoffeeBeansController {
     return coffeeBeans;
   }
 
+  /**
+   *
+   * Creates a new coffee bean
+   *  @param {string} name
+   * @param {string?} description
+   * @param {string} specie
+   *  @param {string} origin
+   * @param {string} roastingLevel
+   * @param {number} price
+   * @returns {CoffeeBean}
+   *
+   */
   public async create({ request, response }) {
     const userId = request["user"]!.userId;
     const shop = await Shop.findOne({ userId });
@@ -46,6 +63,19 @@ export default class CoffeeBeansController {
       return response.notFound({ error: "CoffeeBean not found" });
     return response.ok(coffeeBean);
   }
+
+
+  /**
+   * Updates an existing coffee bean
+   * @param {string} coffeeBeanId
+   * @param {string} name
+   * @param {string?} description
+   * @param {string} specie
+   * @param {string} origin
+   * @param {string} roastingLevel
+   * @param {number} price
+   * @returns null
+   */
 
   public async update({ request, response }) {
     const {

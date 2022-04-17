@@ -13,14 +13,23 @@ const jwt = require("jsonwebtoken");
 import Hash from "@ioc:Adonis/Core/Hash";
 import createShop from "App/Helpers/CreateShop";
 const Shop = mongoose.model("Shop");
-import Hash from "@ioc:Adonis/Core/Hash";
 import Encryption from "@ioc:Adonis/Core/Encryption";
 
 
 
 
 export default class AuthController {
-  //Allows users to create new accounts, returns the new account info
+  /*
+   * Create a new user
+   * Create a new store if user signs up as a vendor
+   * @param {string} email
+   * @param {string} password
+   * @param {string} firstName
+   * @param {string} lastName
+   * @param {object} address
+   *
+   * @return {object} User
+   */
   public async signUp({ request, response }: HttpContextContract) {
     const { email, userType, password, address, firstName, lastName } =
       request.all();
@@ -70,7 +79,7 @@ export default class AuthController {
       email: normalizedEmail,
       firstName: Encryption.encrypt(firstName),
       lastName: Encryption.encrypt(lastName),
-      address:{
+      address: {
         street: Encryption.encrypt(address.street),
         city: Encryption.encrypt(address.city),
         province: Encryption.encrypt(address.province),
@@ -91,6 +100,14 @@ export default class AuthController {
       token,
     });
   }
+
+  /*
+   * Takes email and a password and generates a token if the credentials are valid
+   * @param {string} email
+   * @param {string} password
+   *
+   * @return {object} User
+   */
 
   public async signIn({ request, response }: HttpContextContract) {
     const { email, password } = request.all();

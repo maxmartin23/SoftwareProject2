@@ -11,6 +11,11 @@ const CoffeeBean = mongoose.model("CoffeeBean");
 const User = mongoose.model("User");
 
 export default class ReviewsController {
+  /**
+   *
+   * Gets all reviews for a coffee bean
+   * @returns [Review]
+   */
   public async getAll({ request, response }) {
     const coffeeBeanId = request.qs().id;
     if (!coffeeBeanId)
@@ -37,6 +42,15 @@ export default class ReviewsController {
     }
     return cleanReviews;
   }
+
+  /**
+   * Submits a review for a coffee bean
+   * @param {string} coffeeBeanId
+   * @param {number} rating
+   * @param {string} comment
+   * @returns {Review}
+   *
+   */
 
   public async create({ request, response }) {
     const { coffeeBeanId, rating, comment } = request.body();
@@ -80,7 +94,13 @@ export default class ReviewsController {
 
     return response.created(cleanReview);
   }
-
+  /**
+   * Updates a user's review
+   * @param {string} coffeeBeanId
+   * @param {number} rating
+   * @param {string} comment
+   * @returns {Review}
+   */
   public async update({ request, response }) {
     const { coffeeBeanId, rating, comment } = request.body();
     const userId = request["user"].userId;

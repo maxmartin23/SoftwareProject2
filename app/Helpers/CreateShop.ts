@@ -2,6 +2,14 @@ const mongoose = require("mongoose");
 const Shop = mongoose.model("Shop");
 import { v4 as uuid } from "uuid";
 
+
+
+/**
+ * Creates a shop for a user
+ * @param {string} ownerId 
+ * @param {Shop} shop
+ * @returns Shop
+ */
 export default async function createShop(ownerId: string, shop: any) {
   const { name, description, address, image, location, deliveryRange } = shop;
   try {

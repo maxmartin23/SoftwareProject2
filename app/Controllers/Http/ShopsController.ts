@@ -11,6 +11,13 @@ const CoffeeBean = mongoose.model("CoffeeBean");
 import { getDistance } from "geolib";
 
 export default class ShopsController {
+
+
+
+  /**
+   * Gets shops sorted by distance from a given location
+   * @returns [Shop]
+   */
   public async getNearbyShops({ request, response }: HttpContextContract) {
     let { lat, lng } = request.qs();
     lat = parseFloat(lat);

@@ -4,6 +4,11 @@ import Env from "@ioc:Adonis/Core/Env";
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 
+
+
+/**
+ * Middleware to validate the JWT token
+ */
 export default class JwtAuth {
   public async handle(
     { request, response }: HttpContextContract,

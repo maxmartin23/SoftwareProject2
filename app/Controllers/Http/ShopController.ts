@@ -9,26 +9,12 @@ const mongoose = require("mongoose");
 const Shop = mongoose.model("Shop");
 
 export default class ShopController {
-  public async debugInsert({ request, response }: HttpContextContract) {
-    if (request.qs()["secret"] !== "secret")
-      return response.status(401).json({ error: "Unauthorized" });
 
-    const { name, description, address, image, location } = request.body();
-    const { lat, lng } = location;
-
-    const shop = await Shop.create({
-      name,
-      description,
-      image,
-      address,
-      location: {
-        type: "Point",
-        coordinates: [lng, lat],
-      },
-    });
-    return response.json(shop);
-  }
-
+  
+  /**
+   * Gets a user's shop's details
+   * @returns {Shop}
+   */
   public async shopDetails({ request, response }: HttpContextContract) {
     const userId = request["user"]["userId"];
     const shop = await Shop.findOne({ userId });
@@ -36,7 +22,11 @@ export default class ShopController {
 
     return response.ok(shop);
   }
-
+  /**
+   *  Updates a user's shop
+   * @param {Shop} shop
+   * @returns {Shop}
+   */
   public async update({ request, response }: HttpContextContract) {
     const userId = request["user"]["userId"];
     const shop = await Shop.findOne({ userId });

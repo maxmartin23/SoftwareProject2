@@ -17,11 +17,15 @@ export default class AccountController {
     return user;
   }
 
-  //Updates the user's info
+  /*
+    Updates a user's account
+    @param {string?} firstName
+    @param {string?} lastName
+    @param {object?} address
+  */
   public async update({ request, response }: HttpContextContract) {
     const user = request["user"]!;
     const { firstName, lastName, address } = request.body();
-    //TODO add empty string validations
     user.firstName = Encryption.encrypt(
       firstName.length > 0 ? firstName : user.firstName
     );
@@ -44,7 +48,11 @@ export default class AccountController {
     return updatedUser;
   }
 
-  //Updates the user's password
+  /*
+    Updates a user's password
+    @param {string} oldPassword
+    @param {string} newPassword
+  */
   public async changePassword({ request, response }: HttpContextContract) {
     const user = request["user"]!;
     const { oldPassword, newPassword } = request.body();
